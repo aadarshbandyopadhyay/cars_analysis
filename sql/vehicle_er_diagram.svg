@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1080" viewBox="0 0 1500 1080">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .table { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+      .head { fill: #e0f2fe; stroke: #334155; stroke-width: 2; }
+      .lookup .head { fill: #ecfccb; }
+      .fact .head { fill: #fed7aa; }
+      .stage .head { fill: #e9d5ff; }
+      .title { font: 700 16px Arial, sans-serif; fill: #0f172a; }
+      .field { font: 13px Arial, sans-serif; fill: #1e293b; }
+      .pk { font: 700 13px Arial, sans-serif; fill: #075985; }
+      .fk { font: 13px Arial, sans-serif; fill: #9a3412; }
+      .note { font: 12px Arial, sans-serif; fill: #475569; }
+      .line { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .line-soft { stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 5 5; fill: none; marker-end: url(#arrowSoft); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1500" height="1080"/>
+  <text x="50" y="44" class="title" style="font-size:24px">Cars Analysis ER Diagram</text>
+  <text x="50" y="68" class="note">Normalized MySQL design for Craigslist vehicle listings loaded from vehicles_small.csv</text>
+
+  <!-- Staging table -->
+  <g class="stage">
+    <rect class="table" x="50" y="105" width="255" height="260" rx="6"/>
+    <rect class="head" x="50" y="105" width="255" height="36" rx="6"/>
+    <text x="66" y="128" class="title">raw_vehicle_listings</text>
+    <text x="66" y="162" class="field">id, url, region, region_url</text>
+    <text x="66" y="185" class="field">price, year, manufacturer</text>
+    <text x="66" y="208" class="field">model, condition, cylinders</text>
+    <text x="66" y="231" class="field">fuel, odometer, title_status</text>
+    <text x="66" y="254" class="field">transmission, vin, drive</text>
+    <text x="66" y="277" class="field">size, type, paint_color</text>
+    <text x="66" y="300" class="field">image_url, description</text>
+    <text x="66" y="323" class="field">county, state, lat, lng</text>
+    <text x="66" y="346" class="field">posting_date_raw</text>
+  </g>
+
+  <!-- Location tables -->
+  <g>
+    <rect class="table lookup" x="390" y="105" width="230" height="115" rx="6"/>
+    <rect class="head" x="390" y="105" width="230" height="36" rx="6"/>
+    <text x="406" y="128" class="title">states</text>
+    <text x="406" y="163" class="pk">PK state_id</text>
+    <text x="406" y="186" class="field">state_code</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="390" y="270" width="260" height="145" rx="6"/>
+    <rect class="head" x="390" y="270" width="260" height="36" rx="6"/>
+    <text x="406" y="293" class="title">regions</text>
+    <text x="406" y="328" class="pk">PK region_id</text>
+    <text x="406" y="351" class="fk">FK state_id</text>
+    <text x="406" y="374" class="field">region_name</text>
+    <text x="406" y="397" class="field">region_url</text>
+  </g>
+
+  <!-- Vehicle core -->
+  <g>
+    <rect class="table" x="760" y="210" width="300" height="380" rx="6"/>
+    <rect class="head" x="760" y="210" width="300" height="36" rx="6"/>
+    <text x="776" y="233" class="title">vehicles</text>
+    <text x="776" y="268" class="pk">PK vehicle_id</text>
+    <text x="776" y="291" class="field">source_listing_id</text>
+    <text x="776" y="314" class="field">vin</text>
+    <text x="776" y="337" class="field">year</text>
+    <text x="776" y="360" class="fk">FK manufacturer_id</text>
+    <text x="776" y="383" class="fk">FK model_id</text>
+    <text x="776" y="406" class="fk">FK condition_id</text>
+    <text x="776" y="429" class="fk">FK cylinder_type_id</text>
+    <text x="776" y="452" class="fk">FK fuel_type_id</text>
+    <text x="776" y="475" class="fk">FK title_status_id</text>
+    <text x="776" y="498" class="fk">FK transmission_type_id</text>
+    <text x="776" y="521" class="fk">FK drive_type_id</text>
+    <text x="776" y="544" class="fk">FK vehicle_size_id</text>
+    <text x="776" y="567" class="fk">FK vehicle_type_id, paint_color_id</text>
+  </g>
+
+  <g class="fact">
+    <rect class="table" x="1135" y="240" width="300" height="310" rx="6"/>
+    <rect class="head" x="1135" y="240" width="300" height="36" rx="6"/>
+    <text x="1151" y="263" class="title">vehicle_listings</text>
+    <text x="1151" y="298" class="pk">PK listing_id</text>
+    <text x="1151" y="321" class="fk">FK vehicle_id</text>
+    <text x="1151" y="344" class="fk">FK region_id</text>
+    <text x="1151" y="367" class="field">listing_url</text>
+    <text x="1151" y="390" class="field">price, odometer</text>
+    <text x="1151" y="413" class="field">image_url, description</text>
+    <text x="1151" y="436" class="field">county</text>
+    <text x="1151" y="459" class="field">latitude, longitude</text>
+    <text x="1151" y="482" class="field">posting_date</text>
+    <text x="1151" y="505" class="field">posting_timezone_offset</text>
+  </g>
+
+  <!-- Lookup tables around vehicle -->
+  <g>
+    <rect class="table lookup" x="390" y="500" width="250" height="120" rx="6"/>
+    <rect class="head" x="390" y="500" width="250" height="36" rx="6"/>
+    <text x="406" y="523" class="title">manufacturers</text>
+    <text x="406" y="558" class="pk">PK manufacturer_id</text>
+    <text x="406" y="581" class="field">manufacturer_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="390" y="660" width="270" height="145" rx="6"/>
+    <rect class="head" x="390" y="660" width="270" height="36" rx="6"/>
+    <text x="406" y="683" class="title">vehicle_models</text>
+    <text x="406" y="718" class="pk">PK model_id</text>
+    <text x="406" y="741" class="fk">FK manufacturer_id</text>
+    <text x="406" y="764" class="field">model_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="50" y="455" width="240" height="95" rx="6"/>
+    <rect class="head" x="50" y="455" width="240" height="36" rx="6"/>
+    <text x="66" y="478" class="title">vehicle_conditions</text>
+    <text x="66" y="513" class="pk">PK condition_id</text>
+    <text x="66" y="536" class="field">condition_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="50" y="580" width="240" height="95" rx="6"/>
+    <rect class="head" x="50" y="580" width="240" height="36" rx="6"/>
+    <text x="66" y="603" class="title">cylinder_types</text>
+    <text x="66" y="638" class="pk">PK cylinder_type_id</text>
+    <text x="66" y="661" class="field">cylinder_description</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="50" y="705" width="240" height="95" rx="6"/>
+    <rect class="head" x="50" y="705" width="240" height="36" rx="6"/>
+    <text x="66" y="728" class="title">fuel_types</text>
+    <text x="66" y="763" class="pk">PK fuel_type_id</text>
+    <text x="66" y="786" class="field">fuel_type_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="50" y="830" width="240" height="95" rx="6"/>
+    <rect class="head" x="50" y="830" width="240" height="36" rx="6"/>
+    <text x="66" y="853" class="title">title_statuses</text>
+    <text x="66" y="888" class="pk">PK title_status_id</text>
+    <text x="66" y="911" class="field">title_status_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="390" y="840" width="270" height="95" rx="6"/>
+    <rect class="head" x="390" y="840" width="270" height="36" rx="6"/>
+    <text x="406" y="863" class="title">transmission_types</text>
+    <text x="406" y="898" class="pk">PK transmission_type_id</text>
+    <text x="406" y="921" class="field">transmission_type_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="760" y="650" width="240" height="95" rx="6"/>
+    <rect class="head" x="760" y="650" width="240" height="36" rx="6"/>
+    <text x="776" y="673" class="title">drive_types</text>
+    <text x="776" y="708" class="pk">PK drive_type_id</text>
+    <text x="776" y="731" class="field">drive_type_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="760" y="775" width="240" height="95" rx="6"/>
+    <rect class="head" x="760" y="775" width="240" height="36" rx="6"/>
+    <text x="776" y="798" class="title">vehicle_sizes</text>
+    <text x="776" y="833" class="pk">PK vehicle_size_id</text>
+    <text x="776" y="856" class="field">vehicle_size_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="1060" y="650" width="240" height="95" rx="6"/>
+    <rect class="head" x="1060" y="650" width="240" height="36" rx="6"/>
+    <text x="1076" y="673" class="title">vehicle_types</text>
+    <text x="1076" y="708" class="pk">PK vehicle_type_id</text>
+    <text x="1076" y="731" class="field">vehicle_type_name</text>
+  </g>
+
+  <g>
+    <rect class="table lookup" x="1060" y="775" width="240" height="95" rx="6"/>
+    <rect class="head" x="1060" y="775" width="240" height="36" rx="6"/>
+    <text x="1076" y="798" class="title">paint_colors</text>
+    <text x="1076" y="833" class="pk">PK paint_color_id</text>
+    <text x="1076" y="856" class="field">paint_color_name</text>
+  </g>
+
+  <!-- Relationships -->
+  <path class="line" d="M505 220 L505 270"/>
+  <path class="line" d="M650 342 L1135 344"/>
+  <path class="line" d="M1060 321 L1135 321"/>
+  <path class="line" d="M640 560 L760 360"/>
+  <path class="line" d="M660 732 L760 383"/>
+  <path class="line" d="M290 503 L760 406"/>
+  <path class="line" d="M290 628 L760 429"/>
+  <path class="line" d="M290 753 L760 452"/>
+  <path class="line" d="M290 878 L760 475"/>
+  <path class="line" d="M660 888 L760 498"/>
+  <path class="line" d="M880 650 L880 590"/>
+  <path class="line" d="M880 775 L910 590"/>
+  <path class="line" d="M1060 698 L1060 521"/>
+  <path class="line" d="M1060 823 L1060 567"/>
+  <path class="line" d="M1180 775 L1060 567"/>
+  <path class="line" d="M525 660 L525 620"/>
+
+  <!-- ETL hints -->
+  <path class="line-soft" d="M305 200 C365 200 340 300 390 342"/>
+  <path class="line-soft" d="M305 235 C480 235 610 325 760 400"/>
+  <path class="line-soft" d="M305 275 C590 275 780 220 1135 390"/>
+
+  <text x="50" y="1010" class="note">Solid arrows indicate foreign-key relationships. Dashed arrows show the staging-to-normalized load flow.</text>
+  <text x="50" y="1032" class="note">Lookup tables keep repeated descriptive values normalized; vehicle_listings stores listing-specific price, odometer, location, URL, media, and posting facts.</text>
+</svg>
