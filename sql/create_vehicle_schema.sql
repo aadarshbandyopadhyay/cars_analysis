@@ -173,7 +173,7 @@ CREATE TABLE vehicle_listings (
     latitude DECIMAL(9, 6) NULL,
     longitude DECIMAL(9, 6) NULL,
     posting_date DATETIME NULL,
-    posting_timezone_offset CHAR(5) NULL,
+    posting_timezone_offset CHAR(6) NULL,
     UNIQUE KEY uq_vehicle_listings_listing_url (listing_url),
     KEY idx_vehicle_listings_vehicle_id (vehicle_id),
     KEY idx_vehicle_listings_region_id (region_id),
@@ -188,6 +188,7 @@ CREATE TABLE vehicle_listings (
 -- Staging table with one column per CSV field. Load the CSV here first, then
 -- insert distinct values into the normalized tables.
 CREATE TABLE raw_vehicle_listings (
+    raw_listing_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id VARCHAR(32) NULL,
     url VARCHAR(500) NULL,
     region VARCHAR(120) NULL,
@@ -216,5 +217,7 @@ CREATE TABLE raw_vehicle_listings (
     posting_date_raw VARCHAR(32) NULL,
     KEY idx_raw_vehicle_listings_id (id),
     KEY idx_raw_vehicle_listings_vin (vin),
-    KEY idx_raw_vehicle_listings_region_url (region_url)
+    KEY idx_raw_vehicle_listings_region_url (region_url),
+    KEY idx_raw_vehicle_listings_manufacturer (manufacturer),
+    KEY idx_raw_vehicle_listings_model (model)
 ) ENGINE = InnoDB;

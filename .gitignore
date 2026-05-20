@@ -30,3 +30,4 @@ env/
 data/vehicles.csv
 data/vehicles_clean.csv
 data/*_clean.csv
+data/vehicles_clean_medium.csv
